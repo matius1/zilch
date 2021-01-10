@@ -5,7 +5,7 @@ This repository contains solution for interview task
 #### The purpose of this application is to show how to use cache and database.
 
 ##### Application starts with empty cache and db.
-##### When you add record it will be added just to db.
+##### When you add record it will be added just to db. This action trigger removing all records from cache. Annotation `@CacheEvict(value = "clientCache", allEntries = true)}`
 Log: `Saving new client: [ClientDTO(id=null, firstName=F Name 1, lastName=L Name 1)]`
 ##### When you search for all records, they will be cached under empty key `(SimpleKey.EMPTY)`.
 Log: `Computed cache key 'SimpleKey []' for operation Builder[public java.util.List com.skocz.mateusz.zilch.service.ClientService.findAll()] caches=[clientCache]`
