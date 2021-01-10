@@ -7,6 +7,7 @@ import com.skocz.mateusz.zilch.model.ClientMapper;
 import com.skocz.mateusz.zilch.repository.ClientRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -23,23 +24,30 @@ import java.util.Optional;
 public class ClientService {
 
     @Autowired
-    private ClientRepository clientRepository;
+    private final ClientRepository clientRepository;
 
     @Autowired
-    private ClientMapper clientMapper;
+    private final ClientMapper clientMapper;
+
+    @Autowired
+    private final CacheManager cacheManager;
+
+    public ClientService(ClientRepository clientRepository, ClientMapper clientMapper, CacheManager cacheManager) {
+        this.clientRepository = clientRepository;
+        this.clientMapper = clientMapper;
+        this.cacheManager = cacheManager;
+    }
 
     @Cacheable
     public List<ClientDTO> findAll() {
-        log.info("Find all clients");
         List<Client> allClients = clientRepository.findAll();
-        log.info("Returning [{}] records", allClients.size());
-
+        log.info("Found [{}] records", allClients.size());
         return clientMapper.clientListToClientDtoList(allClients);
     }
 
     @Cacheable
     public ClientDTO findById(Long id) {
-        log.info("Searching for client by id: [{}]", id);
+        log.info("Searching client by id: [{}]", id);
         Optional<Client> maybeClient = clientRepository.findById(id);
         if (maybeClient.isPresent()) {
             Client client = maybeClient.get();
@@ -48,7 +56,6 @@ public class ClientService {
             return clientDTO;
         } else {
             log.info("Client with id=[{}] not found", id);
-            //todo:
             return null;
         }
     }
@@ -58,7 +65,6 @@ public class ClientService {
     public ClientDTO saveClient(ClientDTO clientDTO) {
         Long id = clientDTO.getId();
         if (id == null) {
-            //create method isValid? / isNew?
             log.info("Saving new client: [{}]", clientDTO);
             Client clientToSave = clientMapper.clientDtoToClient(clientDTO);
             Client savedClient = clientRepository.save(clientToSave);
@@ -84,13 +90,13 @@ public class ClientService {
         return true;
     }
 
-    @Autowired
-    private CacheManager cacheManager;
-
     public void flushCache() {
         for (String cacheName : cacheManager.getCacheNames()) {
-            cacheManager.getCache(cacheName).clear();
-            log.info("All records removed from Cache [{}]", cacheName);
+            Cache cache = cacheManager.getCache(cacheName);
+            if (cache != null) {
+                cache.clear();
+                log.info("All records removed from Cache [{}]", cacheName);
+            }
         }
     }
 

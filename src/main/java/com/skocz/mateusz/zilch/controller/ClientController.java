@@ -24,27 +24,22 @@ public class ClientController {
 
     @GetMapping(value = "/id/{id}")
     public ClientDTO findById(@PathVariable Long id) {
-        //todo: what if not found
+        log.info("Request: findById=[{}]", id);
         return clientService.findById(id);
     }
 
     @PostMapping(value = "/update")
     public ClientDTO update(@RequestBody ClientDTO clientDTO) {
+        log.info("Request: update=[{}]", clientDTO);
         return clientService.saveClient(clientDTO);
     }
 
-
-    //todo: remove client?
-
-    @GetMapping(value = "/clearDb")
-    public String clearDb() {
-        //todo: return response codes?
-        return clientService.clearDb() ? "DB cleared" : "Db not cleared";
-    }
-
-    @PostMapping(value = "flushCache")
-    public void flushCache() {
+    @GetMapping(value = "/purge")
+    public String purge() {
+        log.info("Request: purge");
         clientService.flushCache();
+        return clientService.clearDb() ? "DB and Cache cleared" : "DB not cleared";
     }
+
 
 }
