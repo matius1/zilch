@@ -11,9 +11,8 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @Data
 @NoArgsConstructor
-@Builder
-//@EqualsAndHashCode
 @AllArgsConstructor
+@Builder
 public class Client {
 
     @Id

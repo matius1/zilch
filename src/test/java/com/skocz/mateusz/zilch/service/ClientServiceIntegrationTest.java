@@ -22,13 +22,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ClientServiceIntegrationTest {
     public static final String CACHE_NAME = "clientCache";
 
-    //todo: move to integration package
+    @Autowired
+    private CacheManager cacheManager;
 
     @Autowired
-    CacheManager cacheManager;
-
-    @Autowired
-    ClientService clientService;
+    private ClientService clientService;
 
     public static final ClientDTO CLIENT_1 = ClientDTO.builder()
             .firstName("F Name 1")

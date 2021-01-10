@@ -5,10 +5,9 @@ import lombok.*;
 import java.io.Serializable;
 
 @Data
-//@EqualsAndHashCode
 @NoArgsConstructor
-@Builder
 @AllArgsConstructor
+@Builder
 public class ClientDTO implements Serializable {
     private Long id;
     private String firstName;
