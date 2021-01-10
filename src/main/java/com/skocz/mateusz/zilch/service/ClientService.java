@@ -77,7 +77,6 @@ public class ClientService {
                 return clientMapper.clientToClientDto(savedClient);
             } else {
                 log.info("Failed to update existing client: [{}]", clientDTO);
-                //TODO: FIX IT!
                 return null;
             }
         }
