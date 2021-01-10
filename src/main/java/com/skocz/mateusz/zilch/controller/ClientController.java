@@ -33,12 +33,15 @@ public class ClientController {
         return clientService.saveClient(clientDTO);
     }
 
+
+    //todo: remove client?
+
     @GetMapping(value = "/clearDb")
     public String clearDb() {
         //todo: return response codes?
         return clientService.clearDb() ? "DB cleared" : "Db not cleared";
     }
-    
+
     @PostMapping(value = "flushCache")
     public void flushCache() {
         clientService.flushCache();

@@ -1,9 +1,6 @@
 package com.skocz.mateusz.zilch.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,6 +12,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Data
 @NoArgsConstructor
 @Builder
+//@EqualsAndHashCode
 @AllArgsConstructor
 public class Client {
 

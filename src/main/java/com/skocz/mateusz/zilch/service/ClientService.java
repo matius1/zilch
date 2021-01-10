@@ -29,6 +29,7 @@ public class ClientService {
     private ClientMapper clientMapper;
 
     @Cacheable
+//    #root.args[0]
     public List<ClientDTO> findAll() {
         log.info("Find all clients");
         List<Client> allClients = clientRepository.findAll();
@@ -78,7 +79,6 @@ public class ClientService {
         }
 
     }
-
 
     public boolean clearDb(){
         clientRepository.deleteAll();
