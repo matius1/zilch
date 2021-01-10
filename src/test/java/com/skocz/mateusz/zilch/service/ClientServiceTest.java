@@ -50,14 +50,6 @@ class ClientServiceTest {
             .build();
 
     @Test
-    public void test() {
-        // Given
-        // When
-        // Then
-    }
-
-
-    @Test
     public void shouldReturnAll() {
         // Given
         service = new ClientService(repoMock, clientMapper, cacheManagerMock);
@@ -90,11 +82,11 @@ class ClientServiceTest {
         when(repoMock.findById(CLIENT_1.getId())).thenReturn(of(CLIENT_1));
 
         // When
-        ClientDTO result = service.findById(CLIENT_1.getId());
+        Optional<ClientDTO> result = service.findById(CLIENT_1.getId());
 
         // Then
-        assertThat(result).isNotNull()
-                .isEqualTo(clientMapper.clientToClientDto(CLIENT_1));
+        assertThat(result).isPresent();
+        assertThat(result.get()).isEqualTo(clientMapper.clientToClientDto(CLIENT_1));
     }
 
     @Test
@@ -104,10 +96,10 @@ class ClientServiceTest {
         when(repoMock.findById(CLIENT_1.getId())).thenReturn(Optional.empty());
 
         // When
-        ClientDTO result = service.findById(CLIENT_1.getId());
+        Optional<ClientDTO> result = service.findById(CLIENT_1.getId());
 
         // Then
-        assertThat(result).isNull();
+        assertThat(result).isNotPresent();
     }
 
     @Test
@@ -119,11 +111,11 @@ class ClientServiceTest {
         when(repoMock.save(any())).thenReturn(savedClient);
 
         // When
-        ClientDTO result = service.saveClient(CLIENTDTO_TO_SAVE);
+        Optional<ClientDTO> result = service.saveClient(CLIENTDTO_TO_SAVE);
 
         // Then
-        assertThat(result).isNotNull()
-                .isEqualTo(clientMapper.clientToClientDto(savedClient));
+        assertThat(result).isPresent();
+        assertThat(result.get()).isEqualTo(clientMapper.clientToClientDto(savedClient));
     }
 
     @Test
@@ -134,11 +126,11 @@ class ClientServiceTest {
         when(repoMock.save(any())).thenReturn(CLIENT_1);
 
         // When
-        ClientDTO result = service.saveClient(clientMapper.clientToClientDto(CLIENT_1));
+        Optional<ClientDTO> result = service.saveClient(clientMapper.clientToClientDto(CLIENT_1));
 
         // Then
-        assertThat(result).isNotNull()
-                .isEqualTo(clientMapper.clientToClientDto(CLIENT_1));
+        assertThat(result).isPresent();
+        assertThat(result.get()).isEqualTo(clientMapper.clientToClientDto(CLIENT_1));
     }
 
     @Test
@@ -149,10 +141,10 @@ class ClientServiceTest {
         when(repoMock.save(any())).thenReturn(CLIENT_1);
 
         // When
-        ClientDTO result = service.saveClient(clientMapper.clientToClientDto(CLIENT_1));
+        Optional<ClientDTO> result = service.saveClient(clientMapper.clientToClientDto(CLIENT_1));
 
         // Then
-        assertThat(result).isNull();
+        assertThat(result).isNotPresent();
     }
 
     @Test

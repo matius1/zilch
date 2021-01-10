@@ -46,38 +46,38 @@ public class ClientService {
     }
 
     @Cacheable
-    public ClientDTO findById(Long id) {
+    public Optional<ClientDTO> findById(Long id) {
         log.info("Searching client by id: [{}]", id);
         Optional<Client> maybeClient = clientRepository.findById(id);
         if (maybeClient.isPresent()) {
             Client client = maybeClient.get();
             ClientDTO clientDTO = clientMapper.clientToClientDto(client);
             log.info("Found client: [{}]", clientDTO);
-            return clientDTO;
+            return Optional.of(clientDTO);
         } else {
             log.info("Client with id=[{}] not found", id);
-            return null;
+            return Optional.empty();
         }
     }
 
 
     @Caching(evict = {@CacheEvict(value = "clientCache", allEntries = true)})
-    public ClientDTO saveClient(ClientDTO clientDTO) {
+    public Optional<ClientDTO> saveClient(ClientDTO clientDTO) {
         Long id = clientDTO.getId();
         if (id == null) {
             log.info("Saving new client: [{}]", clientDTO);
             Client clientToSave = clientMapper.clientDtoToClient(clientDTO);
             Client savedClient = clientRepository.save(clientToSave);
-            return clientMapper.clientToClientDto(savedClient);
+            return Optional.of(clientMapper.clientToClientDto(savedClient));
         } else {
             log.info("Updating existing client: [{}]", clientDTO);
             if (clientRepository.findById(id).isPresent()) {
                 Client clientToSave = clientMapper.clientDtoToClient(clientDTO);
                 Client savedClient = clientRepository.save(clientToSave);
-                return clientMapper.clientToClientDto(savedClient);
+                return Optional.of(clientMapper.clientToClientDto(savedClient));
             } else {
                 log.info("Failed to update existing client: [{}]", clientDTO);
-                return null;
+                return Optional.empty();
             }
         }
 

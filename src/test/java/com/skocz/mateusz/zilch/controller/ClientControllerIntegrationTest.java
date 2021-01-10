@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Arrays;
@@ -106,6 +107,16 @@ public class ClientControllerIntegrationTest {
         assertThat(responseById.getBody())
                 .isNotNull()
                 .isEqualTo(newClient);
+    }
+
+    @Test
+    public void shouldNotFindClientById() {
+        // Given
+        // When
+        ResponseEntity<String> responseById = restTemplate.getForEntity(LOCALHOST + port + BY_ID + "123", String.class);
+
+        // Then
+        assertThat(responseById.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     private ClientDTO addClient() {

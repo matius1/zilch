@@ -69,12 +69,14 @@ public class ClientServiceIntegrationTest {
     @Test
     public void shouldPopulateCacheFromDB_withFoundData_afterFindByID() {
         // Given
-        ClientDTO savedClient1 = clientService.saveClient(CLIENT_1);
-        ClientDTO savedClient2 = clientService.saveClient(CLIENT_2);
+        Optional<ClientDTO> maybeSavedClient1 = clientService.saveClient(CLIENT_1);
+        Optional<ClientDTO> maybeSavedClient2 = clientService.saveClient(CLIENT_2);
 
+        ClientDTO savedClient1 = maybeSavedClient1.get();
         Optional<ClientDTO> clientInCache1 = findClientInCacheByKey(savedClient1.getId());
         assertThat(clientInCache1).isNotPresent();
 
+        ClientDTO savedClient2 = maybeSavedClient2.get();
         Optional<ClientDTO> clientInCache2 = findClientInCacheByKey(savedClient2.getId());
         assertThat(clientInCache2).isNotPresent();
 
