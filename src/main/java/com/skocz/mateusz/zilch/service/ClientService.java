@@ -29,7 +29,6 @@ public class ClientService {
     private ClientMapper clientMapper;
 
     @Cacheable
-//    #root.args[0]
     public List<ClientDTO> findAll() {
         log.info("Find all clients");
         List<Client> allClients = clientRepository.findAll();
@@ -38,15 +37,16 @@ public class ClientService {
         return clientMapper.clientListToClientDtoList(allClients);
     }
 
+    @Cacheable
     public ClientDTO findById(Long id) {
         log.info("Searching for client by id: [{}]", id);
         Optional<Client> maybeClient = clientRepository.findById(id);
-        if(maybeClient.isPresent()){
+        if (maybeClient.isPresent()) {
             Client client = maybeClient.get();
             ClientDTO clientDTO = clientMapper.clientToClientDto(client);
             log.info("Found client: [{}]", clientDTO);
             return clientDTO;
-        }else {
+        } else {
             log.info("Client with id=[{}] not found", id);
             //todo:
             return null;
@@ -54,9 +54,7 @@ public class ClientService {
     }
 
 
-    @Caching(evict = {
-            @CacheEvict(value = "clientCache", allEntries = true)
-    })
+    @Caching(evict = {@CacheEvict(value = "clientCache", allEntries = true)})
     public ClientDTO saveClient(ClientDTO clientDTO) {
         Long id = clientDTO.getId();
         if (id == null) {
@@ -80,7 +78,7 @@ public class ClientService {
 
     }
 
-    public boolean clearDb(){
+    public boolean clearDb() {
         clientRepository.deleteAll();
         log.info("All records removed from DB");
         return true;
@@ -92,7 +90,7 @@ public class ClientService {
     public void flushCache() {
         for (String cacheName : cacheManager.getCacheNames()) {
             cacheManager.getCache(cacheName).clear();
-            log.info("All records removed from Cache");
+            log.info("All records removed from Cache [{}]", cacheName);
         }
     }
 
